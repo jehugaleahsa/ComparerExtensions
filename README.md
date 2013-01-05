@@ -52,3 +52,45 @@ Sometimes you want to convert an `IComparer<T>` into an `IComparer<T?>`, where `
     IComparer<Person> comparer = KeyComparer<Person>.OrderBy(p => p.LastName).ToNullable().NullsLast();
     
 Here, the order of the method calls is important! The call to `ToNullable` converts the `KeyComparer<Person>` into an `IComparer<Person?>`. The call to `NullsLast` will also return a `IComparer<Person?>`. If the calls went the other way around, you'd get surprising results because `NullsLast` on a non-nullable type has no affect.
+
+### Building Comparers at Runtime
+If you've ever needed to sort values based on user-input, you can testify how difficult this can be. The most common example of this is when ordering multiple columns in a grid.
+
+The `NullComparer<T>` class makes it easies to build comparers. The `NullComparer<T>`'s job is to compare all values as equal. It has no effect on the comparison whatsoever. However, it acts as the first step in building a more complex comparison. For instance, here's how you'd create a `KeyComparer<T>` using `NullComparer<T>`.
+
+    IComparer<T> comparer = NullComparer<T>.Default.ThenBy(p => p.LastName);
+    
+From here, additional comparisons can be added by calling `ThenBy` as many times as needed. In fact, you can place it inside a loop:
+
+    IComparer<Person> comparer = NullComparer<Person>.Default;
+    foreach (SortDescription description in descriptions)
+    {
+        if (description.Ascending)
+        {
+            comparer = comparer.ThenBy(getKeySelector<Person>(description.Property));
+        }
+        else
+        {
+            comparer = comparer.ThenByDescending(getKeySelector<Person>(description.Property));
+        }
+    }
+    people.Sort(comparer);
+    ...
+    
+    private static Func<TSource, object> getKeySelector<TSource>(PropertyInfo property)
+    {
+        return (TSource item) => property.GetValue(item, null);
+    }
+    
+As you can see even from this short example, building comparers at runtime requires some pretty complex code, including some reflection and high-order functions. Still, this is a whole lot easier than having to implement the comparison building logic yourself.
+
+### Optimized Comparers
+Some upfront processing is performed when ComparerExtensions builds comparers to make sure the resulting comparer is going to perform as fast as possible. It avoids deeply nested function calls and unnecessary casts and runtime reflection.
+
+### Working with Older Collections
+If you're stuck working with non-generic collections, like `ArrayList`, you will quickly learn they don't accept `IComparer<T>`. They expect instances of the non-generic `IComparer`. The `Untyped` and `Typed` extension methods are provided to make it easy to convert between comparer types.
+
+    IComparer comparer = KeyComparer<Person>.OrderBy(p => p.LastName);
+    IComparer<Person> comparer = Comparer.Default.Typed<Person>();
+    
+Just so you know, you can safely cast any comparer returned by ComparerExtensions to an `IComparer`. However, it can be more efficient to call `Untyped` and `Typed` because it can do some runtime checks to avoid some overhead.
