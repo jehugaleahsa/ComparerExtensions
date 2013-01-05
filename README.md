@@ -41,7 +41,7 @@ Some times you want to sort a collection of user-defined types so that null fiel
     IComparer<Person> comparer = KeyComparer<Person>.OrderBy(p => p.LastName, Comparer<string>.Default.NullsLast());
     IComparer<Person> comparer = KeyComparer<Person>.OrderBy(p => p.LastName).NullsLast(p => p.LastName);
     
-The first approach requires a little more work. It also forces you to specify the `Comparer<T>` that is being used. This approach might actually be easier if you're doing a case insensitive comparison.
+The first approach requires a little more work. It also forces you to specify the `IComparer<T>` that is being used to compare the field. This approach might actually be easier if you're doing a case insensitive comparison.
 
 The second approach is more convenient because you can configure everything at the top-level and it's less typing.
 
