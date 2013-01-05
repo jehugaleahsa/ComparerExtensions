@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>$id$</id>
+    <version>$version$</version>
+    <authors>$author$</authors>
+    <owners>jehugaleahsa</owners>
+    <projectUrl>http://github.com/jehugaleahsa/comparerextensions</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>$description$</description>
+    <releaseNotes>Initial commit</releaseNotes>
+    <copyright>Copyright 2013</copyright>
+    <tags>IComparer IEqualityComparer comparer comparison extension builder building</tags>
+  </metadata>
+</package>
