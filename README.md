@@ -2,6 +2,8 @@
 
 Build IComparer and IEqualityComparer objects using natural language syntax.
 
+Download using NuGet: [ComparerExtensions](http://nuget.org/packages/ComparerExtensions).
+
 ## Overview
 LINQ provided a lot of useful operations for working with collections. One of the most interesting features was the ability to sort objects by passing a key selector (`Func<TSource, TKey>`) to `OrderBy`. For example:
 
