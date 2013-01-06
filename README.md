@@ -92,7 +92,7 @@ Some upfront processing is performed when ComparerExtensions builds comparers to
 ### Working with Older Collections
 If you're stuck working with non-generic collections, like `ArrayList`, you will quickly learn they don't accept `IComparer<T>`. They expect instances of the non-generic `IComparer`. The `Untyped` and `Typed` extension methods are provided to make it easy to convert between comparer types.
 
-    IComparer comparer = KeyComparer<Person>.OrderBy(p => p.LastName);
+    IComparer comparer = KeyComparer<Person>.OrderBy(p => p.LastName).Untype();
     IComparer<Person> comparer = Comparer.Default.Typed<Person>();
     
 Just so you know, you can safely cast any comparer returned by ComparerExtensions to an `IComparer`. However, it can be more efficient to call `Untyped` and `Typed` because it can do some runtime checks to avoid some overhead.
