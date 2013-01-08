@@ -4,12 +4,12 @@
     <id>$id$</id>
     <version>$version$</version>
     <authors>$author$</authors>
-    <owners>jehugaleahsa</owners>
+    <owners>$author$</owners>
     <projectUrl>http://github.com/jehugaleahsa/comparerextensions</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>$description$</description>
-    <releaseNotes>Initial commit</releaseNotes>
+    <releaseNotes></releaseNotes>
     <copyright>Copyright 2013</copyright>
-    <tags>IComparer IEqualityComparer comparer comparison extension builder building</tags>
+    <tags>IComparer IEqualityComparer comparer comparison extension builder building runtime</tags>
   </metadata>
 </package>
