@@ -9,12 +9,12 @@ LINQ provided a lot of useful operations for working with collections. One of th
 
     IEnumerable<Person> ordered = people.OrderBy(p => p.LastName).ThenBy(p => p.FirstName);
     
-This made it really easy to sort user-defined types, like `Person` in the example above. While this was really awesome when working with LINQ, it was still really hard to work with the built-in collection types. For instance, `List<T>.Sort` requires you to pass an `IComparer<T>` or a `Comparison<T>`. At times, it makes more sense to sort a list in place than it does to create a whole new list.
+This made it really easy to sort user-defined types, like `Person` in the example above. While this was really awesome when working with LINQ, it was still really hard to work with the built-in collection types. For instance, `List<T>.Sort` requires you to pass an `IComparer<T>` or a `Comparison<T>`. Lambdas can help here, a little, but the code starts getting hard to read. 
 
 ComparerExtensions makes the convenience of LINQ's key-based comparers available to the rest of .NET. It also provides additional helpers for handling nulls and building comparers are runtime.
 
 ### Building Compound Comparers
-If you need to compare user-defined types one or more fields, you can use the `KeyComparer` class.
+If you need to compare user-defined types by one or more fields, you can use the `KeyComparer` class.
 
     IComparer<Person> comparer = KeyComparer<Person>.OrderBy(p => p.LastName).ThenBy(p => p.FirstName);
     
@@ -38,7 +38,7 @@ ComparerExtensions provides various extension methods for handling nulls, includ
     
 This code will move null instances of `Person` to the back of the collection. By the time the comparer goes to compare by last name all of the null `Person` instances are handled, preventing `NullReferenceException`s.
 
-Some times you want to sort a collection of user-defined types so that null fields are moved to the front or back. There are two ways to do this with ComparerExtensions:
+Along the same lines, you will want to handle null fields within your types by moving them to the front or back. There are two ways to do this with ComparerExtensions:
 
     IComparer<Person> comparer = KeyComparer<Person>.OrderBy(p => p.LastName, Comparer<string>.Default.NullsLast());
     IComparer<Person> comparer = KeyComparer<Person>.OrderBy(p => p.LastName).NullsLast(p => p.LastName);
@@ -49,7 +49,7 @@ The second approach is more convenient because you can configure everything at t
 
 ComparerExtensions is smart enough to handle mixing of top-level and field-level null handlers. This way, you don't need to worry about the order you call `NullsFirst` and `NullsLast`. You should never get an unexpected `NullReferenceException`.
 
-Sometimes you want to convert an `IComparer<T>` into an `IComparer<T?>`, where `T` is a value type and `T?` is a `Nullable<T>`. The `Comparer<T>` class already handles most primitive types, like `int?`. However, when working with your of value types (`struct`s), you will need to define your own comparer. The `ToNullable` extension method can make this easier. For the sake of the next example, assume `Person` is a value type:
+Sometimes you want to convert an `IComparer<T>` into an `IComparer<T?>`, where `T` is a value type and `T?` is a `Nullable<T>`. The `Comparer<T>` class already handles most primitive types, like `int?`. However, when working with your own value types (`struct`s), you will need to define your own comparer. The `ToNullable` extension method can make this easier. For the sake of the next example, assume `Person` is a value type:
 
     IComparer<Person> comparer = KeyComparer<Person>.OrderBy(p => p.LastName).ToNullable().NullsLast();
     
