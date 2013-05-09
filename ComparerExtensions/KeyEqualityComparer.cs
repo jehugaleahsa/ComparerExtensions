@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace ComparerExtensions
 {
@@ -199,12 +200,12 @@ namespace ComparerExtensions
 
         public override int GetHashCode(T obj)
         {
-            int hashCode = 0;
-            foreach (KeyEqualityComparer<T> comparer in _comparers)
-            {
-                hashCode ^= comparer.GetHashCode(obj);
-            }
-            return hashCode;
+            return _comparers.Aggregate(0, (hc, comparer) => getHashCode(hc, comparer.GetHashCode(obj)));
+        }
+
+        private static int getHashCode(int hashCode1, int hashCode2)
+        {
+            return (hashCode1 << 5) + hashCode1 ^ hashCode2;
         }
     }
 }

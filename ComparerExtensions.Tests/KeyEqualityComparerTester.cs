@@ -290,17 +290,18 @@ namespace ComparerExtensions.Tests
         }
 
         /// <summary>
-        /// If we have multiple And statements, we should flatten the compound
-        /// comparer to avoid any unnecessary overhead.
+        /// If we do a case insensitive comparison, objects differing only base case should compare equal.
         /// </summary>
         [TestMethod]
-        public void TestAdd_XorHashCodes()
+        public void TestAdd_CaseInsensitiveComparer_IgnoresCase()
         {
-            IEqualityComparer<Person> comparer = KeyEqualityComparer<Person>.Using(p => p.LastName).And(p => p.FirstName, EqualityComparer<string>.Default);
-            Person person = new Person() { FirstName = "Bob", LastName = "Hamburger" };
-            int actual = comparer.GetHashCode(person);
-            int expected = person.LastName.GetHashCode() ^ person.FirstName.GetHashCode();
-            Assert.AreEqual(expected, actual, "The hash code was not the xor of the element hash codes.");
+            IEqualityComparer<Person> comparer = KeyEqualityComparer<Person>
+                .Using(p => p.LastName, StringComparer.InvariantCultureIgnoreCase)
+                .And(p => p.FirstName, StringComparer.InvariantCultureIgnoreCase);
+            Person person1 = new Person() { FirstName = "Bob", LastName = "Hamburger" };
+            Person person2 = new Person() { FirstName = "bob", LastName = "hamburger" };
+            Assert.AreEqual(comparer.GetHashCode(person1), comparer.GetHashCode(person2), "The hash codes were not the same.");
+            Assert.IsTrue(comparer.Equals(person1, person2), "The two objects were not considered equal.");
         }
     }
 }
