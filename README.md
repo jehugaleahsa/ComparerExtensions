@@ -51,7 +51,7 @@ ComparerExtensions is smart enough to handle mixing of top-level and field-level
 
 Sometimes you want to convert an `IComparer<T>` into an `IComparer<T?>`, where `T` is a value type and `T?` is a `Nullable<T>`. The `Comparer<T>` class already handles most primitive types, like `int?`. However, when working with your own value types (`struct`s), you will need to define your own comparer. The `ToNullable` extension method can make this easier. For the sake of the next example, assume `Person` is a value type:
 
-    IComparer<Person?> comparer = KeyComparer<Person>.OrderBy(p => p.LastName).ToNullable().NullsLast();
+    IComparer<Person?> comparer = KeyComparer<Person>.OrderBy(p => p.LastName).ToNullableComparer().NullsLast();
     
 Here, the order of the method calls is important! The call to `ToNullable` converts the `KeyComparer<Person>` into an `IComparer<Person?>`. The call to `NullsLast` will also return a `IComparer<Person?>`. If the calls went the other way around, you'd get surprising results because `NullsLast` on a non-nullable type has no affect.
 
