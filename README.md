@@ -51,14 +51,14 @@ ComparerExtensions is smart enough to handle mixing of top-level and field-level
 
 Sometimes you want to convert an `IComparer<T>` into an `IComparer<T?>`, where `T` is a value type and `T?` is a `Nullable<T>`. The `Comparer<T>` class already handles most primitive types, like `int?`. However, when working with your own value types (`struct`s), you will need to define your own comparer. The `ToNullable` extension method can make this easier. For the sake of the next example, assume `Person` is a value type:
 
-    IComparer<Person> comparer = KeyComparer<Person>.OrderBy(p => p.LastName).ToNullable().NullsLast();
+    IComparer<Person?> comparer = KeyComparer<Person>.OrderBy(p => p.LastName).ToNullable().NullsLast();
     
 Here, the order of the method calls is important! The call to `ToNullable` converts the `KeyComparer<Person>` into an `IComparer<Person?>`. The call to `NullsLast` will also return a `IComparer<Person?>`. If the calls went the other way around, you'd get surprising results because `NullsLast` on a non-nullable type has no affect.
 
 ### Building Comparers at Runtime
 If you've ever needed to sort values based on user-input, you can testify how difficult this can be. The most common example of this is when ordering multiple columns in a grid.
 
-The `NullComparer<T>` class makes it easies to build comparers. The `NullComparer<T>`'s job is to compare all values as equal. It has no effect on the comparison whatsoever. However, it acts as the first step in building a more complex comparison. For instance, here's how you'd create a `KeyComparer<T>` using `NullComparer<T>`.
+The `NullComparer<T>` class makes it easier to build comparers. The `NullComparer<T>`'s job is to compare all values as equal. It has no effect on the comparison whatsoever. However, it acts as the first step in building a more complex comparison. For instance, here's how you'd create a `KeyComparer<T>` using `NullComparer<T>`.
 
     IComparer<T> comparer = NullComparer<T>.Default.ThenBy(p => p.LastName);
     
