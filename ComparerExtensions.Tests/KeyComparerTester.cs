@@ -25,7 +25,7 @@ namespace ComparerExtensions.Tests
 
             string[] names = { "Bob", "George", "Mary", "Jessica", "David" };
 
-            IComparer<string> comparer = KeyComparer<string>.OrderBy(item => item.Length);
+            KeyComparer<string> comparer = KeyComparer<string>.OrderBy(item => item.Length);
             Array.Sort(names, comparer);
 
             string[] expected = { "Bob", "Mary", "David", "George", "Jessica" };
@@ -42,7 +42,7 @@ namespace ComparerExtensions.Tests
 
             string[] names = { "Bob", "George", "Mary", "Jessica", "David" };
 
-            IComparer<string> comparer = KeyComparer<string>.OrderByDescending(item => item.Length);
+            KeyComparer<string> comparer = KeyComparer<string>.OrderByDescending(item => item.Length);
             Array.Sort(names, comparer);
 
             string[] expected = { "Jessica", "George", "David", "Mary", "Bob" };
@@ -179,7 +179,7 @@ namespace ComparerExtensions.Tests
         [TestMethod]
         public void TestKeyComparer_Explicit_NonGeneric()
         {
-            IComparer comparer = KeyComparer<int>.OrderBy(i => i).Untyped();
+            IComparer comparer = KeyComparer<int>.OrderBy(i => i);
             int result = comparer.Compare(1, 2);
             Assert.IsTrue(result < 0, "Failed to compare values explicitly.");
         }
