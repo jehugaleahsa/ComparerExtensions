@@ -1,21 +1,11 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual Studio 2010
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ComparerExtensions", "ComparerExtensions\ComparerExtensions.csproj", "{30A94CA4-1A5F-4DB9-9084-EA5BD1A62283}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ComparerExtensions.Tests", "ComparerExtensions.Tests\ComparerExtensions.Tests.csproj", "{F7027B4A-C714-41A4-B08D-3A43A99C600D}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{7969F02C-A5F0-4F40-B1B4-06CFEC10906B}"
-	ProjectSection(SolutionItems) = preProject
-		ComparerExtensions.vsmdi = ComparerExtensions.vsmdi
-		Local.testsettings = Local.testsettings
-		TraceAndTestImpact.testsettings = TraceAndTestImpact.testsettings
-	EndProjectSection
-EndProject
 Global
-	GlobalSection(TestCaseManagementSettings) = postSolution
-		CategoryFile = ComparerExtensions.vsmdi
-	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU

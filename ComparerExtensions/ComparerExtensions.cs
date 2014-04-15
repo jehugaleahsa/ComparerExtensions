@@ -72,7 +72,7 @@ namespace ComparerExtensions
             {
                 throw new ArgumentNullException("baseComparer");
             }
-            KeyComparer<T> comparer = KeyComparer<T>.OrderBy(keySelector);
+            IComparer<T> comparer = KeyComparer<T>.OrderBy(keySelector);
             IComparer<T> compoundComparer = CompoundComparer<T>.GetComparer(baseComparer, comparer);
             return compoundComparer;
         }
@@ -95,7 +95,7 @@ namespace ComparerExtensions
             {
                 throw new ArgumentNullException("baseComparer");
             }
-            KeyComparer<T> comparer = KeyComparer<T>.OrderBy(keySelector, keyComparer);
+            IComparer<T> comparer = KeyComparer<T>.OrderBy(keySelector, keyComparer);
             IComparer<T> compoundComparer = CompoundComparer<T>.GetComparer(baseComparer, comparer);
             return compoundComparer;
         }
@@ -118,7 +118,7 @@ namespace ComparerExtensions
             {
                 throw new ArgumentNullException("baseComparer");
             }
-            KeyComparer<T> comparer = KeyComparer<T>.OrderBy(keySelector, keyComparison);
+            IComparer<T> comparer = KeyComparer<T>.OrderBy(keySelector, keyComparison);
             IComparer<T> compoundComparer = CompoundComparer<T>.GetComparer(baseComparer, comparer);
             return compoundComparer;
         }
@@ -139,7 +139,7 @@ namespace ComparerExtensions
             {
                 throw new ArgumentNullException("baseComparer");
             }
-            KeyComparer<T> comparer = KeyComparer<T>.OrderByDescending(keySelector);
+            IComparer<T> comparer = KeyComparer<T>.OrderByDescending(keySelector);
             IComparer<T> compoundComparer = CompoundComparer<T>.GetComparer(baseComparer, comparer);
             return compoundComparer;
         }
@@ -162,7 +162,7 @@ namespace ComparerExtensions
             {
                 throw new ArgumentNullException("baseComparer");
             }
-            KeyComparer<T> comparer = KeyComparer<T>.OrderByDescending(keySelector, keyComparer);
+            IComparer<T> comparer = KeyComparer<T>.OrderByDescending(keySelector, keyComparer);
             IComparer<T> compoundComparer = CompoundComparer<T>.GetComparer(baseComparer, comparer);
             return compoundComparer;
         }
@@ -187,7 +187,7 @@ namespace ComparerExtensions
             {
                 throw new ArgumentNullException("baseComparer");
             }
-            KeyComparer<T> comparer = KeyComparer<T>.OrderByDescending(keySelector, keyComparison);
+            IComparer<T> comparer = KeyComparer<T>.OrderByDescending(keySelector, keyComparison);
             IComparer<T> compoundComparer = CompoundComparer<T>.GetComparer(baseComparer, comparer);
             return compoundComparer;
         }
