@@ -96,3 +96,8 @@ If you're stuck working with non-generic collections, like `ArrayList`, you will
     IComparer<Person> typed = untyped.Typed<Person>();
     
 Just so you know, you can safely cast any comparer returned by ComparerExtensions to an `IComparer`. However, it can be more efficient to call `Untyped` and `Typed` because it can do some runtime checks to avoid overhead.
+
+## Licence
+If you are looking for a licence, you won't find one. The software in this project is free, as in "free as air". Feel free to use my software anyway you like. Use it to build up your evil war machine, swindle old people out of their social security or crush the souls of the innocent.
+
+I love to hear how people are using my code, so drop me a line. Feel free to contribute any enhancements or documentation you may come up with, but don't feel obligated. I just hope this code makes someone's life just a little bit easier.
