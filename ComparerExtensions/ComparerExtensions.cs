@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Reflection;
 
 namespace ComparerExtensions
 {
@@ -725,7 +726,7 @@ namespace ComparerExtensions
                     Activator.CreateInstance(filterType, new object[] { true }),
                 };
             }
-            if (comparedType.IsValueType)
+            if (comparedType.GetTypeInfo().IsValueType)
             {
                 return new object[2];
             }
