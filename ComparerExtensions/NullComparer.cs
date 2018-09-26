@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 
 namespace ComparerExtensions
@@ -10,8 +9,6 @@ namespace ComparerExtensions
     /// <typeparam name="T">The type of the items to compare.</typeparam>
     public sealed class NullComparer<T> : IComparer<T>, IComparer
     {
-        private readonly static NullComparer<T> _instance = new NullComparer<T>();
-
         private NullComparer()
         {
         }
@@ -19,13 +16,7 @@ namespace ComparerExtensions
         /// <summary>
         /// Gets the default instance of a NullComparer.
         /// </summary>
-        public static NullComparer<T> Default
-        {
-            get
-            {
-                return _instance;
-            }
-        }
+        public static NullComparer<T> Default { get; } = new NullComparer<T>();
 
         /// <summary>
         /// Always returns zero, indicating that the two values are equal.

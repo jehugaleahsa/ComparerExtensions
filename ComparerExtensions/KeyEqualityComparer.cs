@@ -59,7 +59,7 @@ namespace ComparerExtensions
         {
             if (keySelector == null)
             {
-                throw new ArgumentNullException("keySelector");
+                throw new ArgumentNullException(nameof(keySelector));
             }
             return new TypedKeyEqualityComparer<T, TKey>(keySelector, EqualityComparer<TKey>.Default);
         }
@@ -77,11 +77,11 @@ namespace ComparerExtensions
         {
             if (keySelector == null)
             {
-                throw new ArgumentNullException("keySelector");
+                throw new ArgumentNullException(nameof(keySelector));
             }
             if (keyComparer == null)
             {
-                throw new ArgumentNullException("keyComparer");
+                throw new ArgumentNullException(nameof(keyComparer));
             }
             return new TypedKeyEqualityComparer<T, TKey>(keySelector, keyComparer);
         }
@@ -101,7 +101,7 @@ namespace ComparerExtensions
         {
             if (keySelector == null)
             {
-                throw new ArgumentNullException("keySelector");
+                throw new ArgumentNullException(nameof(keySelector));
             }
             CompoundKeyEqualityComparer<T> comparer = new CompoundKeyEqualityComparer<T>();
             comparer.Add(this);
@@ -126,11 +126,11 @@ namespace ComparerExtensions
         {
             if (keySelector == null)
             {
-                throw new ArgumentNullException("keySelector");
+                throw new ArgumentNullException(nameof(keySelector));
             }
             if (keyComparer == null)
             {
-                throw new ArgumentNullException("keyComparer");
+                throw new ArgumentNullException(nameof(keyComparer));
             }
             CompoundKeyEqualityComparer<T> comparer = new CompoundKeyEqualityComparer<T>();
             comparer.Add(this);
@@ -175,8 +175,7 @@ namespace ComparerExtensions
 
         public void Add(KeyEqualityComparer<T> comparer)
         {
-            CompoundKeyEqualityComparer<T> compoundComparer = comparer as CompoundKeyEqualityComparer<T>;
-            if (compoundComparer == null)
+            if (!(comparer is CompoundKeyEqualityComparer<T> compoundComparer))
             {
                 _comparers.Add(comparer);
             }
@@ -200,10 +199,10 @@ namespace ComparerExtensions
 
         public override int GetHashCode(T obj)
         {
-            return _comparers.Aggregate(0, (hc, comparer) => getHashCode(hc, comparer.GetHashCode(obj)));
+            return _comparers.Aggregate(0, (hc, comparer) => GetHashCode(hc, comparer.GetHashCode(obj)));
         }
 
-        private static int getHashCode(int hashCode1, int hashCode2)
+        private static int GetHashCode(int hashCode1, int hashCode2)
         {
             return (hashCode1 << 5) + hashCode1 ^ hashCode2;
         }
