@@ -6,16 +6,16 @@ namespace ComparerExtensions
 {
     internal static class NullFilterFactory
     {
-        private static readonly Dictionary<Type, object[]> FilterTypeLookup = 
-            new Dictionary<Type, object[]>();
+        private static readonly Dictionary<Type, object[]> filterTypeLookup = new Dictionary<Type, object[]>();
 
         public static NullFilter<T> GetNullFilter<T>(bool nullsFirst)
         {
-            var comparedType = typeof(T);
-            if (FilterTypeLookup.TryGetValue(comparedType, out var filters))
-                return (NullFilter<T>) filters[nullsFirst ? 1 : 0];
-            filters = GetTypeFilters<T>(comparedType, filters);
-            FilterTypeLookup.Add(comparedType, filters);
+            Type comparedType = typeof(T);
+            if (!filterTypeLookup.TryGetValue(comparedType, out object[] filters))
+            {
+                filters = GetTypeFilters<T>(comparedType, filters);
+                filterTypeLookup.Add(comparedType, filters);
+            }
             return (NullFilter<T>)filters[nullsFirst ? 1 : 0];
         }
 

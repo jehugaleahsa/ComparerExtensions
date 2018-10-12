@@ -22,14 +22,8 @@ namespace ComparerExtensions
 
         public IComparer Comparer { get; }
 
-        public int Compare(T x, T y)
-        {
-            return Comparer.Compare(x, y);
-        }
+        public int Compare(T x, T y) => Comparer.Compare(x, y);
 
-        int IComparer.Compare(object x, object y)
-        {
-            return Comparer.Compare(x, y);
-        }
+        int IComparer.Compare(object x, object y) => Comparer.Compare(x, y);
     }
 }

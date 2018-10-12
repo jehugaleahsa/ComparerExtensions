@@ -5,7 +5,7 @@ namespace ComparerExtensions
 {
     internal sealed class ComparisonWrapper<T> : Comparer<T>
     {
-        private readonly Func<T, T, int> _comparison;
+        private readonly Func<T, T, int> comparison;
 
         public static IComparer<T> GetComparer(Func<T, T, int> comparison)
         {
@@ -15,12 +15,9 @@ namespace ComparerExtensions
 
         private ComparisonWrapper(Func<T, T, int> comparison)
         {
-            _comparison = comparison;
+            this.comparison = comparison;
         }
 
-        public override int Compare(T x, T y)
-        {
-            return _comparison(x, y);
-        }
+        public override int Compare(T x, T y) => comparison(x, y);
     }
 }

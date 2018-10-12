@@ -5,11 +5,11 @@ namespace ComparerExtensions
 {
     internal sealed class KeyedNullPlacementComparer<T, TKey> : NullPlacementComparer<T, TKey>, IPrecedenceEnforcer<T>
     {
-        private readonly Func<T, TKey> _keySelector;
+        private readonly Func<T, TKey> keySelector;
 
         public static IComparer<T> GetComparer(IComparer<T> comparer, Func<T, TKey> keySelector, bool nullsFirst)
         {
-            NullFilter<TKey> filter = NullFilterFactory.GetNullFilter<TKey>(nullsFirst);
+            var filter = NullFilterFactory.GetNullFilter<TKey>(nullsFirst);
             if (filter == null)
             {
                 return comparer;
@@ -20,13 +20,13 @@ namespace ComparerExtensions
         internal KeyedNullPlacementComparer(IComparer<T> comparer, Func<T, TKey> keySelector, NullFilter<TKey> filter)
             : base(comparer, filter)
         {
-            _keySelector = keySelector;
+            this.keySelector = keySelector;
         }
 
         public override int Compare(T x, T y)
         {
-            TKey xKey = _keySelector(x);
-            TKey yKey = _keySelector(y);
+            var xKey = keySelector(x);
+            var yKey = keySelector(y);
             return NullFilter.Filter(xKey, yKey) ?? Comparer.Compare(x, y);
         }
 
@@ -44,10 +44,10 @@ namespace ComparerExtensions
 
         public IComparer<T> CreateCompoundComparer(IComparer<T> comparer)
         {
-            CompoundComparer<T> compoundComparer = new CompoundComparer<T>();
+            var compoundComparer = new CompoundComparer<T>();
             compoundComparer.AppendComparison(Comparer);
             compoundComparer.AppendComparison(comparer);
-            return GetComparer(compoundComparer.Normalize(), _keySelector, NullFilter.NullsFirst);
+            return GetComparer(compoundComparer.Normalize(), keySelector, NullFilter.NullsFirst);
         }
     }
 }

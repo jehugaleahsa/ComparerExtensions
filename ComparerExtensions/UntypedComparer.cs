@@ -9,13 +9,10 @@ namespace ComparerExtensions
         {
             switch (comparer)
             {
-                case TypedComparer<T> typed:
-                    return typed.Comparer;
-                case IComparer untyped:
-                    return untyped;
+                case TypedComparer<T> typed: return typed.Comparer;
+                case IComparer untyped: return untyped;
+                default: return new UntypedComparer<T>(comparer);
             }
-
-            return new UntypedComparer<T>(comparer);
         }
 
         private UntypedComparer(IComparer<T> comparer)
@@ -25,14 +22,8 @@ namespace ComparerExtensions
 
         public IComparer<T> Comparer { get; }
 
-        public int Compare(T x, T y)
-        {
-            return Comparer.Compare(x, y);
-        }
+        public int Compare(T x, T y) => Comparer.Compare(x, y);
 
-        int IComparer.Compare(object x, object y)
-        {
-            return Comparer.Compare((T) x, (T) y);
-        }
+        int IComparer.Compare(object x, object y) => Comparer.Compare((T) x, (T) y);
     }
 }

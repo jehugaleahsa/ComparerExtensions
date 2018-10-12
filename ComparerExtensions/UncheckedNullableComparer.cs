@@ -5,16 +5,13 @@ namespace ComparerExtensions
     internal sealed class UncheckedNullableComparer<T> : Comparer<T?>
         where T : struct
     {
-        private readonly IComparer<T> _comparer;
+        private readonly IComparer<T> comparer;
 
         public UncheckedNullableComparer(IComparer<T> comparer)
         {
-            _comparer = comparer;
+            this.comparer = comparer;
         }
 
-        public override int Compare(T? x, T? y)
-        {
-            return _comparer.Compare(x.Value, y.Value);
-        }
+        public override int Compare(T? x, T? y) => comparer.Compare(x.Value, y.Value);
     }
 }

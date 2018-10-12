@@ -9,24 +9,19 @@
 
         public override int? Filter(T x, T y)
         {
-            if (x != null)
+            if (x == null)
             {
-                if (y != null) return null;
-                if (NullsFirst)
+                if (y == null)
                 {
-                    return 1;
+                    return 0;
                 }
-                return -1;
+                return NullsFirst ? -1 : 1;
             }
             if (y == null)
             {
-                return 0;
+                return NullsFirst ? 1 : -1;
             }
-            if (NullsFirst)
-            {
-                return -1;
-            }
-            return 1;
+            return null;
         }
     }
 }

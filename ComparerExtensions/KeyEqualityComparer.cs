@@ -38,15 +38,9 @@ namespace ComparerExtensions
         /// <exception cref="System.ArgumentNullException">The value is null.</exception>
         public abstract int GetHashCode(T obj);
 
-        bool IEqualityComparer.Equals(object x, object y)
-        {
-            return Equals((T)x, (T)y);
-        }
+        bool IEqualityComparer.Equals(object x, object y) => Equals((T)x, (T)y);
 
-        int IEqualityComparer.GetHashCode(object obj)
-        {
-            return GetHashCode((T)obj);
-        }
+        int IEqualityComparer.GetHashCode(object obj) => GetHashCode((T)obj);
 
         /// <summary>
         /// Creates a KeyEqualityComparer that compares values by the key returned by the key selector.
@@ -103,7 +97,7 @@ namespace ComparerExtensions
             {
                 throw new ArgumentNullException(nameof(keySelector));
             }
-            CompoundKeyEqualityComparer<T> comparer = new CompoundKeyEqualityComparer<T>();
+            var comparer = new CompoundKeyEqualityComparer<T>();
             comparer.Add(this);
             comparer.Add(new TypedKeyEqualityComparer<T, TKey>(keySelector, EqualityComparer<TKey>.Default));
             return comparer;
@@ -132,7 +126,7 @@ namespace ComparerExtensions
             {
                 throw new ArgumentNullException(nameof(keyComparer));
             }
-            CompoundKeyEqualityComparer<T> comparer = new CompoundKeyEqualityComparer<T>();
+            var comparer = new CompoundKeyEqualityComparer<T>();
             comparer.Add(this);
             comparer.Add(new TypedKeyEqualityComparer<T, TKey>(keySelector, keyComparer));
             return comparer;
@@ -141,53 +135,53 @@ namespace ComparerExtensions
 
     internal sealed class TypedKeyEqualityComparer<T, TKey> : KeyEqualityComparer<T>
     {
-        private readonly Func<T, TKey> _keySelector;
-        private readonly IEqualityComparer<TKey> _keyComparer;
+        private readonly Func<T, TKey> keySelector;
+        private readonly IEqualityComparer<TKey> keyComparer;
 
         public TypedKeyEqualityComparer(Func<T, TKey> keySelector, IEqualityComparer<TKey> keyComparer)
         {
-            _keySelector = keySelector;
-            _keyComparer = keyComparer;
+            this.keySelector = keySelector;
+            this.keyComparer = keyComparer;
         }
 
         public override bool Equals(T x, T y)
         {
-            TKey key1 = _keySelector(x);
-            TKey key2 = _keySelector(y);
-            return _keyComparer.Equals(key1, key2);
+            var key1 = keySelector(x);
+            var key2 = keySelector(y);
+            return keyComparer.Equals(key1, key2);
         }
 
         public override int GetHashCode(T obj)
         {
-            TKey key = _keySelector(obj);
-            return _keyComparer.GetHashCode(key);
+            var key = keySelector(obj);
+            return keyComparer.GetHashCode(key);
         }
     }
 
     internal sealed class CompoundKeyEqualityComparer<T> : KeyEqualityComparer<T>
     {
-        private readonly List<KeyEqualityComparer<T>> _comparers;
+        private readonly List<KeyEqualityComparer<T>> comparers;
 
         public CompoundKeyEqualityComparer()
         {
-            _comparers = new List<KeyEqualityComparer<T>>();
+            comparers = new List<KeyEqualityComparer<T>>();
         }
 
         public void Add(KeyEqualityComparer<T> comparer)
         {
-            if (!(comparer is CompoundKeyEqualityComparer<T> compoundComparer))
+            if (comparer is CompoundKeyEqualityComparer<T> compoundComparer)
             {
-                _comparers.Add(comparer);
+                comparers.AddRange(compoundComparer.comparers);
             }
             else
             {
-                _comparers.AddRange(compoundComparer._comparers);
+                comparers.Add(comparer);
             }
         }
 
         public override bool Equals(T x, T y)
         {
-            foreach (KeyEqualityComparer<T> comparer in _comparers)
+            foreach (var comparer in comparers)
             {
                 if (!comparer.Equals(x, y))
                 {
@@ -199,7 +193,7 @@ namespace ComparerExtensions
 
         public override int GetHashCode(T obj)
         {
-            return _comparers.Aggregate(0, (hc, comparer) => GetHashCode(hc, comparer.GetHashCode(obj)));
+            return comparers.Aggregate(0, (hc, comparer) => GetHashCode(hc, comparer.GetHashCode(obj)));
         }
 
         private static int GetHashCode(int hashCode1, int hashCode2)

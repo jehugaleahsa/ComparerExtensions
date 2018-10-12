@@ -16,14 +16,13 @@
                 {
                     return null;
                 }
-                if (NullsFirst)
-                {
-                    return 1;
-                }
-                return -1;
+                return NullsFirst ? 1 : -1;
             }
-            if (!y.HasValue) return 0;
-            return NullsFirst ? -1 : 1;
+            if (y.HasValue)
+            {
+                return NullsFirst ? -1 : 1;
+            }
+            return 0;
         }
     }
 }

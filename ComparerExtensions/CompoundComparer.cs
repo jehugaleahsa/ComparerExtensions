@@ -4,7 +4,7 @@ namespace ComparerExtensions
 {
     internal sealed class CompoundComparer<T> : Comparer<T>
     {
-        private readonly List<IComparer<T>> _comparers;
+        private readonly List<IComparer<T>> comparers;
 
         public static IComparer<T> GetComparer(IComparer<T> baseComparer, IComparer<T> nextComparer)
         {
@@ -21,25 +21,26 @@ namespace ComparerExtensions
 
         public CompoundComparer()
         {
-            _comparers = new List<IComparer<T>>();
+            comparers = new List<IComparer<T>>();
         }
 
         public void AppendComparison(IComparer<T> comparer)
         {
-            switch (comparer)
+            if (comparer is NullComparer<T>)
             {
-                case NullComparer<T> _:
-                    return;
-                case CompoundComparer<T> other:
-                    _comparers.AddRange(other._comparers);
-                    return;
+                return;
             }
-            _comparers.Add(comparer);
+            if (comparer is CompoundComparer<T> other)
+            {
+                comparers.AddRange(other.comparers);
+                return;
+            }
+            comparers.Add(comparer);
         }
 
         public override int Compare(T x, T y)
         {
-            foreach (var comparer in _comparers)
+            foreach (var comparer in comparers)
             {
                 var result = comparer.Compare(x, y);
                 if (result != 0)
@@ -52,15 +53,15 @@ namespace ComparerExtensions
 
         public IComparer<T> Normalize()
         {
-            switch (_comparers.Count)
+            if (comparers.Count == 0)
             {
-                case 0:
-                    return NullComparer<T>.Default;
-                case 1:
-                    return _comparers[0];
-                default:
-                    return this;
+                return NullComparer<T>.Default;
             }
+            if (comparers.Count == 1)
+            {
+                return comparers[0];
+            }
+            return this;
         }
     }
 }

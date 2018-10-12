@@ -16,16 +16,17 @@ namespace ComparerExtensions
         {
         }
 
-        public override int Compare(T x, T y)
-        {
-            return NullFilter.Filter(x, y) ?? Comparer.Compare(x, y);
-        }
+        public override int Compare(T x, T y) => NullFilter.Filter(x, y) ?? Comparer.Compare(x, y);
 
         public IComparer<T> CreateUnkeyedComparer(bool nullsFirst)
         {
             // we're duplicating ourselves
-            return nullsFirst == NullFilter.NullsFirst ? this : GetComparer(Comparer, nullsFirst);
+            if (nullsFirst == NullFilter.NullsFirst)
+            {
+                return this;
+            }
             // we're replacing ourselves with another top-level comparer with a different sort order
+            return GetComparer(Comparer, nullsFirst);
         }
 
         public IComparer<T> CreateKeyedComparer<TKey>(Func<T, TKey> keySelector, bool nullsFirst)
@@ -37,7 +38,7 @@ namespace ComparerExtensions
 
         public IComparer<T> CreateCompoundComparer(IComparer<T> comparer)
         {
-            CompoundComparer<T> compoundComparer = new CompoundComparer<T>();
+            var compoundComparer = new CompoundComparer<T>();
             compoundComparer.AppendComparison(Comparer);
             compoundComparer.AppendComparison(comparer);
             return GetComparer(compoundComparer.Normalize(), NullFilter.NullsFirst);

@@ -72,7 +72,7 @@ namespace ComparerExtensions
             {
                 throw new ArgumentNullException(nameof(baseComparer));
             }
-            IComparer<T> comparer = KeyComparer<T>.OrderBy(keySelector);
+            var comparer = KeyComparer<T>.OrderBy(keySelector);
             var compoundComparer = CompoundComparer<T>.GetComparer(baseComparer, comparer);
             return compoundComparer;
         }
@@ -89,13 +89,16 @@ namespace ComparerExtensions
         /// <exception cref="System.ArgumentNullException">The base comparer is null.</exception>
         /// <exception cref="System.ArgumentNullException">The key selector is null.</exception>
         /// <exception cref="System.ArgumentNullException">The key comparison delegate is null.</exception>
-        public static IComparer<T> ThenBy<T, TKey>(this IComparer<T> baseComparer, Func<T, TKey> keySelector, IComparer<TKey> keyComparer)
+        public static IComparer<T> ThenBy<T, TKey>(
+            this IComparer<T> baseComparer, 
+            Func<T, TKey> keySelector, 
+            IComparer<TKey> keyComparer)
         {
             if (baseComparer == null)
             {
                 throw new ArgumentNullException(nameof(baseComparer));
             }
-            IComparer<T> comparer = KeyComparer<T>.OrderBy(keySelector, keyComparer);
+            var comparer = KeyComparer<T>.OrderBy(keySelector, keyComparer);
             var compoundComparer = CompoundComparer<T>.GetComparer(baseComparer, comparer);
             return compoundComparer;
         }
@@ -112,13 +115,16 @@ namespace ComparerExtensions
         /// <exception cref="System.ArgumentNullException">The base comparer is null.</exception>
         /// <exception cref="System.ArgumentNullException">The key selector is null.</exception>
         /// <exception cref="System.ArgumentNullException">The key comparison delegate is null.</exception>
-        public static IComparer<T> ThenBy<T, TKey>(this IComparer<T> baseComparer, Func<T, TKey> keySelector, Func<TKey, TKey, int> keyComparison)
+        public static IComparer<T> ThenBy<T, TKey>(
+            this IComparer<T> baseComparer, 
+            Func<T, TKey> keySelector, 
+            Func<TKey, TKey, int> keyComparison)
         {
             if (baseComparer == null)
             {
                 throw new ArgumentNullException(nameof(baseComparer));
             }
-            IComparer<T> comparer = KeyComparer<T>.OrderBy(keySelector, keyComparison);
+            var comparer = KeyComparer<T>.OrderBy(keySelector, keyComparison);
             var compoundComparer = CompoundComparer<T>.GetComparer(baseComparer, comparer);
             return compoundComparer;
         }
@@ -139,7 +145,7 @@ namespace ComparerExtensions
             {
                 throw new ArgumentNullException(nameof(baseComparer));
             }
-            IComparer<T> comparer = KeyComparer<T>.OrderByDescending(keySelector);
+            var comparer = KeyComparer<T>.OrderByDescending(keySelector);
             var compoundComparer = CompoundComparer<T>.GetComparer(baseComparer, comparer);
             return compoundComparer;
         }
@@ -156,13 +162,16 @@ namespace ComparerExtensions
         /// <exception cref="System.ArgumentNullException">The base comparer is null.</exception>
         /// <exception cref="System.ArgumentNullException">The key selector is null.</exception>
         /// <exception cref="System.ArgumentNullException">The key comparison delegate is null.</exception>
-        public static IComparer<T> ThenByDescending<T, TKey>(this IComparer<T> baseComparer, Func<T, TKey> keySelector, IComparer<TKey> keyComparer)
+        public static IComparer<T> ThenByDescending<T, TKey>(
+            this IComparer<T> baseComparer, 
+            Func<T, TKey> keySelector, 
+            IComparer<TKey> keyComparer)
         {
             if (baseComparer == null)
             {
                 throw new ArgumentNullException(nameof(baseComparer));
             }
-            IComparer<T> comparer = KeyComparer<T>.OrderByDescending(keySelector, keyComparer);
+            var comparer = KeyComparer<T>.OrderByDescending(keySelector, keyComparer);
             var compoundComparer = CompoundComparer<T>.GetComparer(baseComparer, comparer);
             return compoundComparer;
         }
@@ -179,7 +188,8 @@ namespace ComparerExtensions
         /// <exception cref="System.ArgumentNullException">The base comparer is null.</exception>
         /// <exception cref="System.ArgumentNullException">The key selector is null.</exception>
         /// <exception cref="System.ArgumentNullException">The key comparison delegate is null.</exception>
-        public static IComparer<T> ThenByDescending<T, TKey>(this IComparer<T> baseComparer,
+        public static IComparer<T> ThenByDescending<T, TKey>(
+            this IComparer<T> baseComparer,
             Func<T, TKey> keySelector,
             Func<TKey, TKey, int> keyComparison)
         {
@@ -187,7 +197,7 @@ namespace ComparerExtensions
             {
                 throw new ArgumentNullException(nameof(baseComparer));
             }
-            IComparer<T> comparer = KeyComparer<T>.OrderByDescending(keySelector, keyComparison);
+            var comparer = KeyComparer<T>.OrderByDescending(keySelector, keyComparison);
             var compoundComparer = CompoundComparer<T>.GetComparer(baseComparer, comparer);
             return compoundComparer;
         }
@@ -207,7 +217,7 @@ namespace ComparerExtensions
             {
                 throw new ArgumentNullException(nameof(baseComparer));
             }
-            IComparer<T?> uncheckedComparer = new UncheckedNullableComparer<T>(baseComparer);
+            var uncheckedComparer = new UncheckedNullableComparer<T>(baseComparer);
             return UnkeyedNullPlacementComparer<T?>.GetComparer(uncheckedComparer, true);
         }
 
@@ -222,15 +232,15 @@ namespace ComparerExtensions
         /// <remarks>The returned comparer is guaranteed to never pass a null value to the given base comparer.</remarks>
         public static IComparer<T> NullsFirst<T>(this IComparer<T> baseComparer)
         {
-            switch (baseComparer)
+            if (baseComparer == null)
             {
-                case null:
-                    throw new ArgumentNullException(nameof(baseComparer));
-                case IPrecedenceEnforcer<T> previous:
-                    return previous.CreateUnkeyedComparer(true);
+                throw new ArgumentNullException(nameof(baseComparer));
             }
-
-            return UnkeyedNullPlacementComparer<T>.GetComparer(baseComparer, true);
+            if (baseComparer is IPrecedenceEnforcer<T> previous)
+            {
+                return previous.CreateUnkeyedComparer(nullsFirst: true);
+            }
+            return UnkeyedNullPlacementComparer<T>.GetComparer(baseComparer, nullsFirst: true);
         }
 
         /// <summary>
@@ -244,15 +254,15 @@ namespace ComparerExtensions
         /// <remarks>The returned comparer is guaranteed to never pass a null value to the given base comparer.</remarks>
         public static IComparer<T> NullsLast<T>(this IComparer<T> baseComparer)
         {
-            switch (baseComparer)
+            if (baseComparer == null)
             {
-                case null:
-                    throw new ArgumentNullException(nameof(baseComparer));
-                case IPrecedenceEnforcer<T> previous:
-                    return previous.CreateUnkeyedComparer(false);
+                throw new ArgumentNullException("baseComparer");
             }
-
-            return UnkeyedNullPlacementComparer<T>.GetComparer(baseComparer, false);
+            if (baseComparer is IPrecedenceEnforcer<T> previous)
+            {
+                return previous.CreateUnkeyedComparer(nullsFirst: false);
+            }
+            return UnkeyedNullPlacementComparer<T>.GetComparer(baseComparer, nullsFirst: false);
         }
 
         /// <summary>
