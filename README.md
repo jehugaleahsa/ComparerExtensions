@@ -1,3 +1,5 @@
+> *Archived 2026-03-28*: This project is very old and will no longer be maintained. Many years after publishing this project, I stopped working in .NET and started working in Java. Imagine my surprise to learn that Java's `Comparator` interface has nearly perfect feature parity with this project! It was almost like they shamelessly copied it from me. Highly unlikely, but shocking.
+
 # ComparerExtensions
 
 Build IComparer and IEqualityComparer objects using natural language syntax.
